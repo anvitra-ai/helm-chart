@@ -72,7 +72,7 @@ helm install shilp-server ./helm/shilp-server \
   --set env.shilpDbPath=/data/db
 ```
 
-### 4. Upgrade an Existing Installation
+### 3. Upgrade an Existing Installation
 
 ```bash
 helm upgrade shilp-server ./helm/shilp-server \
@@ -80,7 +80,7 @@ helm upgrade shilp-server ./helm/shilp-server \
   --reuse-values
 ```
 
-### 5. Uninstall
+### 4. Uninstall
 
 ```bash
 helm uninstall shilp-server
