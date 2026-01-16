@@ -1,0 +1,67 @@
+🚀 Shilp Server has been deployed!
+
+Chart Name: {{ .Chart.Name }}
+Chart Version: {{ .Chart.Version }}
+App Version: {{ .Chart.AppVersion }}
+Release Name: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+📊 Configuration:
+{{- if eq .Values.env.aws.enableStorage "true" }}
+  Storage: AWS S3
+  - Upload Bucket: {{ .Values.env.aws.s3UploadBucket }}
+  - Database Bucket: {{ .Values.env.aws.s3DbBucket }}
+  - Region: {{ .Values.env.aws.region }}
+{{- else }}
+  Storage: Persistent Volume
+  - Size: {{ .Values.persistence.size }}
+  - Storage Class: {{ .Values.persistence.storageClass | default "default" }}
+{{- end }}
+  Replicas: {{ .Values.replicaCount }}
+  Metrics Enabled: {{ .Values.env.enableMetrics }}
+
+🔍 Get the application status:
+  kubectl get pods -l app.kubernetes.io/name={{ include "shilp-server.name" . }} -n {{ .Release.Namespace }}
+
+📝 View logs:
+  kubectl logs -l app.kubernetes.io/name={{ include "shilp-server.name" . }} -n {{ .Release.Namespace }} -f
+
+🔐 AWS Credentials:
+{{- if and .Values.awsCredentials .Values.awsCredentials.existingSecret }}
+  Using secret: {{ .Values.awsCredentials.existingSecret }}
+{{- else }}
+  ⚠️  No AWS credentials configured. If using S3 storage, create a secret:
+  kubectl create secret generic shilp-server-aws-credentials \
+    --from-literal=accessKeyId=YOUR_KEY \
+    --from-literal=secretAccessKey=YOUR_SECRET \
+    -n {{ .Release.Namespace }}
+  
+  Then upgrade the release:
+  helm upgrade {{ .Release.Name }} {{ .Chart.Name }} \
+    --set awsCredentials.existingSecret=shilp-server-aws-credentials \
+    --reuse-values
+{{- end }}
+
+{{- if .Values.autoscaling.enabled }}
+
+⚡ Auto-scaling is enabled:
+  Min Replicas: {{ .Values.autoscaling.minReplicas }}
+  Max Replicas: {{ .Values.autoscaling.maxReplicas }}
+  Target CPU: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}%
+{{- end }}
+
+{{- if and .Values.persistence.enabled (ne .Values.env.aws.enableStorage "true") }}
+
+💾 Persistent Volume:
+  PVC Name: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{ else }}{{ include "shilp-server.fullname" . }}{{ end }}
+  
+  Check PVC status:
+  kubectl get pvc {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{ else }}{{ include "shilp-server.fullname" . }}{{ end }} -n {{ .Release.Namespace }}
+{{- end }}
+
+📚 For more information:
+  - Chart Documentation: helm/shilp-server/README.md
+  - View all resources: kubectl get all -l app.kubernetes.io/instance={{ .Release.Name }} -n {{ .Release.Namespace }}
+  - Get values: helm get values {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+Happy searching! 🔍

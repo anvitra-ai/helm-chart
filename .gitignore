@@ -1,0 +1,4 @@
+shilp-server-*
+
+.env
+aws.env

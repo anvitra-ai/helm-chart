@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "shilp-server.fullname" . }}
+  labels:
+    {{- include "shilp-server.labels" . | nindent 4 }}
+data:
+  aws-enable-storage: {{ .Values.env.aws.enableStorage | quote }}
+  aws-region: {{ .Values.env.aws.region | quote }}
+  aws-s3-upload-bucket: {{ .Values.env.aws.s3UploadBucket | quote }}
+  aws-s3-db-bucket: {{ .Values.env.aws.s3DbBucket | quote }}
+  enable-metrics: {{ .Values.env.enableMetrics | quote }}
+  auto-load-collections: {{ .Values.env.autoLoadCollections | quote }}
+  shilp-file-path: {{ .Values.env.shilpFilePath | quote }}
+  upload-file-path: {{ .Values.env.uploadFilePath | quote }}
+  disable-docs-creation: {{ .Values.env.disableDocsCreation | quote }}
+  aws-enable-embedding-models: {{ .Values.env.aws.enableEmbeddingModels | quote }}
+  aws-default-embedding-model: {{ .Values.env.aws.defaultEmbeddingModel | quote }}
+  log-level: {{ .Values.env.logLevel | default "info" | quote }}

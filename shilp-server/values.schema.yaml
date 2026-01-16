@@ -1,0 +1,191 @@
+# Helm Chart Values Schema
+# This file documents all available values for IDE autocomplete and validation
+
+# Number of pod replicas
+replicaCount: 1
+
+# Container image configuration
+image:
+  # Docker image repository
+  repository: "anvitraai/shilp-server"
+  # Image pull policy: Always, IfNotPresent, Never
+  pullPolicy: "IfNotPresent"
+  # Image tag (overrides Chart.appVersion)
+  tag: "v0.9.2"
+
+# Override chart name
+nameOverride: ""
+
+# Override full resource names
+fullnameOverride: ""
+
+# Service account configuration
+serviceAccount:
+  # Create a service account
+  create: true
+  # Automatically mount service account token
+  automount: true
+  # Annotations for service account
+  annotations: {}
+  # Name of service account (generated if empty)
+  name: ""
+
+# Annotations for pods
+podAnnotations: {}
+
+# Labels for pods
+podLabels: {}
+
+# Security context for pod
+podSecurityContext:
+  fsGroup: 2000
+
+# Security context for container
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 1000
+
+# Kubernetes service configuration
+service:
+  # Service type: ClusterIP, NodePort, LoadBalancer
+  type: "ClusterIP"
+  # Service port
+  port: 3000
+  # Container port
+  targetPort: 3000
+
+# Resource limits and requests
+resources:
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
+  requests:
+    cpu: "500m"
+    memory: "512Mi"
+
+# Liveness probe configuration
+livenessProbe:
+  httpGet:
+    path: "/health"
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Readiness probe configuration
+readinessProbe:
+  httpGet:
+    path: "/health"
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Horizontal pod autoscaling
+autoscaling:
+  # Enable HPA
+  enabled: false
+  # Minimum replicas
+  minReplicas: 1
+  # Maximum replicas
+  maxReplicas: 5
+  # Target CPU utilization percentage
+  targetCPUUtilizationPercentage: 80
+  # Target memory utilization percentage (optional)
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes
+volumes: []
+
+# Additional volume mounts
+volumeMounts: []
+
+# Node selector for label-based node selection
+# Use this to schedule pods only on nodes with specific labels
+# Example: nodeSelector: { workload: shilp-server, disktype: ssd }
+nodeSelector: {}
+
+# Tolerations allow pods to schedule on nodes with matching taints
+# This is crucial for node isolation - ensuring dedicated nodes for shilp-server
+# that won't run other applications, and vice-versa
+# Example tolerations for dedicated shilp-server nodes:
+# tolerations:
+#   - key: "app"
+#     operator: "Equal"
+#     value: "shilp-server"
+#     effect: "NoSchedule"  # Prevents other pods from scheduling
+#   - key: "dedicated"
+#     operator: "Equal"
+#     value: "shilp"
+#     effect: "NoExecute"  # Evicts non-tolerant pods
+tolerations: []
+
+# Affinity rules for advanced pod scheduling
+affinity: {}
+
+# Application environment variables
+env:
+  # AWS configuration
+  aws:
+    # Enable AWS S3 storage: "true" or "false"
+    # When "true", no persistent volume is created
+    # When "false", persistent volume is used
+    enableStorage: "false"
+    # AWS region for S3
+    region: "ap-south-1"
+    # S3 bucket for file uploads
+    s3UploadBucket: ""
+    # S3 bucket for database files
+    s3DbBucket: ""
+    # Enable AWS embedding models: "true" or "false"
+    enableEmbeddingModels: "false"
+    # Default AWS embedding model name
+    defaultEmbeddingModel: ""
+  
+  # Enable metrics endpoint: "true" or "false"
+  enableMetrics: "true"
+  
+  # Comma-separated list of collections to auto-load on startup
+  autoLoadCollections: ""
+
+  # Shilp file path
+  shilpFilePath: "/data/shilp"
+
+  # Upload file path
+  uploadFilePath: "/data/upload"
+
+  # Log level: "debug", "info", "warn", "error"
+  logLevel: "info"
+
+# AWS credentials configuration
+awsCredentials:
+  # Name of existing Kubernetes secret containing AWS credentials
+  # Secret should have keys: accessKeyId and secretAccessKey
+  existingSecret: ""
+  # Key name for access key ID in the secret
+  accessKeyIdKey: "accessKeyId"
+  # Key name for secret access key in the secret
+  secretAccessKeyKey: "secretAccessKey"
+
+# Persistent volume configuration
+# Only used when env.aws.enableStorage is "false"
+persistence:
+  # Enable persistent volume
+  enabled: true
+  # Use existing PVC (if empty, new PVC is created)
+  # existingClaim: ""
+  # Storage class name (uses cluster default if empty)
+  storageClass: ""
+  # Access mode: ReadWriteOnce, ReadWriteMany, ReadOnlyMany
+  accessMode: "ReadWriteOnce"
+  # Volume size
+  size: "10Gi"
+  # Mount path in container
+  mountPath: "/data"
+  # Annotations for PVC
+  annotations: {}

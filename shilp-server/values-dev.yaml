@@ -1,0 +1,65 @@
+# Example values for development environment
+replicaCount: 1
+
+image:
+  repository: anvitraai/shilp-server
+  pullPolicy: Always
+  tag: "v0.9.2"
+
+env:
+  aws:
+    enableStorage: "false"
+    region: ""
+    s3UploadBucket: ""
+    s3DbBucket: "anvitra-local-shilp-db"
+    enableEmbeddingModels: "false"
+    defaultEmbeddingModel: ""
+  enableMetrics: "true"
+  autoLoadCollections: ""
+  shilpFilePath: "/data/shilp"
+  uploadFilePath: "/data/upload"
+  logLevel: "debug"
+
+# awsCredentials:
+#   existingSecret: "shilp-server-aws-credentials"
+#   accessKeyIdKey: "accessKeyId"
+#   secretAccessKeyKey: "secretAccessKey"
+
+# Use local persistent volume for development
+persistence:
+  enabled: true
+  storageClass: "standard"
+  size: 5Gi
+
+service:
+  type: ClusterIP
+  port: 3000
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+  requests:
+    cpu: 1000m
+    memory: 1Gi
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+autoscaling:
+  enabled: false
