@@ -110,31 +110,31 @@ helm uninstall shilp-server
 
 ### Key Parameters
 
-| Parameter                       | Description                         | Default                                                              |
-| ------------------------------- | ----------------------------------- | -------------------------------------------------------------------- |
-| `replicaCount`                  | Number of replicas                  | `1`                                                                  |
-| `image.repository`              | Image repository                    | `255325274555.dkr.ecr.ap-south-1.amazonaws.com/anvitra/shilp-server` |
-| `image.tag`                     | Image tag                           | `arm64_linux`                                                        |
-| `env.aws.enableStorage`         | Use AWS S3 for storage              | `false`                                                              |
-| `env.aws.region`                | AWS region                          | `ap-south-1`                                                         |
-| `env.aws.s3UploadBucket`        | S3 bucket for uploads               | `""`                                                                 |
-| `env.aws.s3DbBucket`            | S3 bucket for database              | `""`                                                                 |
-| `env.enableMetrics`             | Enable metrics                      | `true`                                                               |
-| `env.autoLoadCollections`       | Auto-load collections on startup    | `""`                                                                 |
-| `awsCredentials.existingSecret` | Name of secret with AWS credentials | `""`                                                                 |
-| `server.existingSecret`         | Name of secret with server credentials | `shilp-server-credentials`                                        |
-| `server.encryptKeyKey`          | Secret key used for `SETTINGS_ENCRYPTION_KEY` | `encryptionKey`                                             |
-| `persistence.enabled`           | Enable persistent volume            | `true`                                                               |
-| `persistence.size`              | Size of persistent volume           | `10Gi`                                                               |
-| `persistence.storageClass`      | Storage class name                  | `""`                                                                 |
-| `initContainers`                | Init containers to run before main  | `[]` (includes data directory setup)                                 |
-| `nodeSelector`                  | Node labels for pod scheduling      | `{}`                                                                 |
-| `tolerations`                   | Tolerations for tainted nodes       | `[]`                                                                 |
-| `service.type`                  | Service type                        | `ClusterIP`                                                          |
-| `service.port`                  | Service port                        | `3000`                                                               |
-| `resources.limits.cpu`          | CPU limit                           | `1000m`                                                              |
-| `resources.limits.memory`       | Memory limit                        | `1Gi`                                                                |
-| `autoscaling.enabled`           | Enable HPA                          | `false`                                                              |
+| Parameter                       | Description                                   | Default                                                              |
+| ------------------------------- | --------------------------------------------- | -------------------------------------------------------------------- |
+| `replicaCount`                  | Number of replicas                            | `1`                                                                  |
+| `image.repository`              | Image repository                              | `255325274555.dkr.ecr.ap-south-1.amazonaws.com/anvitra/shilp-server` |
+| `image.tag`                     | Image tag                                     | `arm64_linux`                                                        |
+| `env.aws.enableStorage`         | Use AWS S3 for storage                        | `false`                                                              |
+| `env.aws.region`                | AWS region                                    | `ap-south-1`                                                         |
+| `env.aws.s3UploadBucket`        | S3 bucket for uploads                         | `""`                                                                 |
+| `env.aws.s3DbBucket`            | S3 bucket for database                        | `""`                                                                 |
+| `env.enableMetrics`             | Enable metrics                                | `true`                                                               |
+| `env.autoLoadCollections`       | Auto-load collections on startup              | `""`                                                                 |
+| `awsCredentials.existingSecret` | Name of secret with AWS credentials           | `""`                                                                 |
+| `server.existingSecret`         | Name of secret with server credentials        | `shilp-server-credentials`                                           |
+| `server.encryptKeyKey`          | Secret key used for `SETTINGS_ENCRYPTION_KEY` | `encryptionKey`                                                      |
+| `persistence.enabled`           | Enable persistent volume                      | `true`                                                               |
+| `persistence.size`              | Size of persistent volume                     | `10Gi`                                                               |
+| `persistence.storageClass`      | Storage class name                            | `""`                                                                 |
+| `initContainers`                | Init containers to run before main            | `[]` (includes data directory setup)                                 |
+| `nodeSelector`                  | Node labels for pod scheduling                | `{}`                                                                 |
+| `tolerations`                   | Tolerations for tainted nodes                 | `[]`                                                                 |
+| `service.type`                  | Service type                                  | `ClusterIP`                                                          |
+| `service.port`                  | Service port                                  | `3000`                                                               |
+| `resources.limits.cpu`          | CPU limit                                     | `1000m`                                                              |
+| `resources.limits.memory`       | Memory limit                                  | `1Gi`                                                                |
+| `autoscaling.enabled`           | Enable HPA                                    | `false`                                                              |
 
 ### Storage Configuration
 
