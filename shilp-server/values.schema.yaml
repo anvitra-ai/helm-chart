@@ -172,6 +172,12 @@ awsCredentials:
   # Key name for secret access key in the secret
   secretAccessKeyKey: "secretAccessKey"
 
+
+# Server credentials configuration
+server:
+  existingSecret: "shilp-server-credentials"
+  encryptKeyKey: "encryptionKey"
+  
 # Persistent volume configuration
 # Only used when env.aws.enableStorage is "false"
 persistence:

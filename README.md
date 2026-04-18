@@ -41,7 +41,24 @@ Make sure the to add this file to `.gitignore `to avoid committing. Then run the
 kubectl create secret generic shilp-server-aws-credentials  --from-env-file=aws.env
 ```
 
-### 2. Install the Chart
+### 2. Create Server Credentials Secret
+
+The chart reads `SETTINGS_ENCRYPTION_KEY` from a Kubernetes secret. Create a secret named `shilp-server-credentials` with the `encryptionKey` entry:
+
+```bash
+kubectl create secret generic shilp-server-credentials \
+  --from-literal=encryptionKey=YOUR_ENCRYPT_KEY
+```
+
+If you want to use a different secret name or key name, configure them with Helm values:
+
+```yaml
+server:
+  existingSecret: shilp-server-credentials
+  encryptKeyKey: encryptionKey
+```
+
+### 3. Install the Chart
 
 #### For local testing
 
@@ -57,7 +74,8 @@ helm install shilp-server ./helm/shilp-server \
   --set env.aws.region=ap-south-1 \
   --set env.aws.s3UploadBucket=your-upload-bucket \
   --set env.aws.s3DbBucket=your-db-bucket \
-  --set awsCredentials.existingSecret=shilp-server-aws-credentials
+  --set awsCredentials.existingSecret=shilp-server-aws-credentials \
+  --set server.existingSecret=shilp-server-credentials
 ```
 
 #### With Persistent Volume Storage
@@ -68,19 +86,21 @@ helm install shilp-server ./helm/shilp-server \
   --set persistence.enabled=true \
   --set persistence.size=20Gi \
   --set persistence.storageClass=standard \
+  --set server.existingSecret=shilp-server-credentials \
   --set env.shilpFilePath=/data/shilp \
   --set env.shilpDbPath=/data/db
 ```
 
-### 3. Upgrade an Existing Installation
+### 4. Upgrade an Existing Installation
 
 ```bash
 helm upgrade shilp-server ./helm/shilp-server \
   --set env.aws.s3UploadBucket=new-bucket \
+  --set server.existingSecret=shilp-server-credentials \
   --reuse-values
 ```
 
-### 4. Uninstall
+### 5. Uninstall
 
 ```bash
 helm uninstall shilp-server
@@ -102,6 +122,8 @@ helm uninstall shilp-server
 | `env.enableMetrics`             | Enable metrics                      | `true`                                                               |
 | `env.autoLoadCollections`       | Auto-load collections on startup    | `""`                                                                 |
 | `awsCredentials.existingSecret` | Name of secret with AWS credentials | `""`                                                                 |
+| `server.existingSecret`         | Name of secret with server credentials | `shilp-server-credentials`                                        |
+| `server.encryptKeyKey`          | Secret key used for `SETTINGS_ENCRYPTION_KEY` | `encryptionKey`                                             |
 | `persistence.enabled`           | Enable persistent volume            | `true`                                                               |
 | `persistence.size`              | Size of persistent volume           | `10Gi`                                                               |
 | `persistence.storageClass`      | Storage class name                  | `""`                                                                 |
@@ -182,6 +204,10 @@ env:
 
 awsCredentials:
   existingSecret: "shilp-server-aws-credentials"
+
+server:
+  existingSecret: "shilp-server-credentials"
+  encryptKeyKey: "encryptionKey"
 
 service:
   type: LoadBalancer

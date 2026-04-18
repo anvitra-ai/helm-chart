@@ -115,6 +115,11 @@ spec:
             secretKeyRef:
               name: {{ .Values.awsCredentials.existingSecret }}
               key: {{ .Values.awsCredentials.secretAccessKeyKey }}
+        - name: SETTINGS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.server.shilp-server-credentials }}
+              key: {{ .Values.server.encryptKeyKey }}
         {{- end }}
         livenessProbe:
           httpGet:

@@ -24,7 +24,9 @@ env:
 #   existingSecret: "shilp-server-aws-credentials"
 #   accessKeyIdKey: "accessKeyId"
 #   secretAccessKeyKey: "secretAccessKey"
-
+server:
+  existingSecret: "shilp-server-credentials"
+  encryptKeyKey: "encryptionKey"
 # Use local persistent volume for development
 persistence:
   enabled: true

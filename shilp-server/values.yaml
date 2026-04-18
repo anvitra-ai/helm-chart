@@ -147,6 +147,11 @@ env:
 #   accessKeyIdKey: "accessKeyId"
 #   secretAccessKeyKey: "secretAccessKey"
 
+
+server:
+  existingSecret: "shilp-server-credentials"
+  encryptKeyKey: "encryptionKey"
+  
 # Persistent Volume Configuration
 # Only used when aws.enableStorage is false
 persistence:

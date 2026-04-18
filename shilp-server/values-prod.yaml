@@ -27,6 +27,10 @@ awsCredentials:
   accessKeyIdKey: "accessKeyId"
   secretAccessKeyKey: "secretAccessKey"
 
+server:
+  existingSecret: "shilp-server-credentials"
+  encryptKeyKey: "encryptionKey"
+
 # No persistent volume needed when using S3
 persistence:
   enabled: false
